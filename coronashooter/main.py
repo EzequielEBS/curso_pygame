@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import pygame
 from pygame.locals import (DOUBLEBUF,
                            FULLSCREEN,
@@ -23,7 +25,7 @@ class Jogo:
         self.jogador = None
         self.interval = 0
         self.nivel = 0
-        self.fonte = pygame.font.SysFont('calibri', 22, True, True)
+
         flags = DOUBLEBUF
         if fullscreen:
             flags |= FULLSCREEN
@@ -32,6 +34,7 @@ class Jogo:
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
         self.run = True
+        self.fonte = pygame.font.SysFont('arial', 22, True)
 
     def manutenção(self):
         r = random.randint(0, 100)
@@ -125,8 +128,8 @@ class Jogo:
                 self.jogador.atira(self.elementos["tiros"])
 
     def atualiza_vidas(self):
-        texto = self.fonte.render('Vidas', False,(255,255,255))
-        self.tela.blit(texto,(50,50))
+        texto = self.fonte.render(f'Vidas: {self.jogador.get_lives()}', True,(255,255,255))
+        self.tela.blit(texto,(0,0))
 
     def loop(self):
         clock = pygame.time.Clock()
@@ -139,14 +142,17 @@ class Jogo:
         while self.run:
             clock.tick(1000 / dt)
 
+            
             self.trata_eventos()
             self.ação_elemento()
             self.manutenção()
+            
             # Atualiza Elementos
             self.atualiza_elementos(dt)
-            self.atualiza_vidas()
+            
             # Desenhe no back buffer
             self.desenha_elementos()
+            self.atualiza_vidas()
             pygame.display.flip()
 
 
