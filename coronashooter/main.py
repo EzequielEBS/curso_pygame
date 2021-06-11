@@ -14,7 +14,7 @@ import random
 
 
 class Jogo:
-    def __init__(self, size=(1000, 1000), fullscreen=False):
+    def __init__(self, size=(700, 700), fullscreen=False):
         self.elementos = {}
         pygame.init()
         self.tela = pygame.display.set_mode(size)
