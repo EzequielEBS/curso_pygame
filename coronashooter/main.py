@@ -11,6 +11,7 @@ from pygame.locals import (DOUBLEBUF,
 from fundo import Fundo
 from elementos import ElementoSprite
 import random
+import sys
 
 
 class Jogo:
@@ -22,6 +23,7 @@ class Jogo:
         self.jogador = None
         self.interval = 0
         self.nivel = 0
+        self.fonte = pygame.font.SysFont('calibri', 22, True, True)
         flags = DOUBLEBUF
         if fullscreen:
             flags |= FULLSCREEN
@@ -122,6 +124,10 @@ class Jogo:
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
 
+    def atualiza_vidas(self):
+        texto = self.fonte.render('Vidas', False,(255,255,255))
+        self.tela.blit(texto,(50,50))
+
     def loop(self):
         clock = pygame.time.Clock()
         dt = 16
@@ -138,7 +144,7 @@ class Jogo:
             self.manutenção()
             # Atualiza Elementos
             self.atualiza_elementos(dt)
-
+            self.atualiza_vidas()
             # Desenhe no back buffer
             self.desenha_elementos()
             pygame.display.flip()
@@ -292,3 +298,5 @@ class Tiro(ElementoSprite):
 if __name__ == '__main__':
     J = Jogo()
     J.loop()
+pygame.init()
+print(pygame.font.get_fonts())
