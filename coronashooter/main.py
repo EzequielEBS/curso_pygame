@@ -29,7 +29,7 @@ class Jogo:
         self.jogador = None
         self.interval = 0
         self.nivel = 0
-        self.fonte = pygame.font.SysFont("segoe-ui-symbol.ttf", 64)
+        self.fonte = pygame.font.SysFont("segoe-ui-symbol.ttf", 30)
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
@@ -127,9 +127,11 @@ class Jogo:
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
 
-    def atualiza_vidas(self):
+    def escreve_textos(self):
         vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives()}', True,(255,255,255))
+        pontuacao = self.fonte.render(f'Pontos: {self.jogador.get_pontos()}',True,(255,255,255))
         self.tela.blit(vidas,(0,0))
+        self.tela.blit(pontuacao,(600,0))
 
     def loop(self):
         clock = pygame.time.Clock()
@@ -152,7 +154,7 @@ class Jogo:
             
             # Desenhe no back buffer
             self.desenha_elementos()
-            self.atualiza_vidas()
+            self.escreve_textos()
             pygame.display.flip()
 
 
