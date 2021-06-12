@@ -112,20 +112,35 @@ class Jogo:
             elif key in (K_LCTRL, K_RCTRL):
                 self.interval = 0
                 self.jogador.atira(self.elementos["tiros"])
-            elif key == K_UP:
+
+        if event.type == KEYDOWN:
+            key = event.key
+            if key == K_UP:
                 self.jogador.accel_top()
-            elif key == K_DOWN:
+            if key == K_DOWN:
                 self.jogador.accel_bottom()
             elif key == K_RIGHT:
                 self.jogador.accel_right()
             elif key == K_LEFT:
                 self.jogador.accel_left()
 
+        if event.type == KEYUP:
+            key = event.key
+            if key == K_UP:
+                self.jogador.set_speed((self.jogador.get_speed()[0], 0))
+            if key == K_DOWN:
+                self.jogador.set_speed((self.jogador.get_speed()[0], 0))
+            elif key == K_RIGHT:
+                self.jogador.set_speed((0, self.jogador.get_speed()[1]))
+            elif key == K_LEFT:
+                self.jogador.set_speed((0, self.jogador.get_speed()[1]))
+
         keys = pygame.key.get_pressed()
         if self.interval > 10:
             self.interval = 0
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
+
 
     def escreve_textos(self):
         vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives()}', True,(255,255,255))
@@ -160,7 +175,7 @@ class Jogo:
 
 class Nave(ElementoSprite):
     def __init__(self, position, lives=0, speed=[0, 0], image=None, new_size=[83, 248]):
-        self.acceleration = [3, 3]
+        self.acceleration = [6, 6]
         if not image:
             image = "seringa.png"
         super().__init__(image, position, speed, new_size)
