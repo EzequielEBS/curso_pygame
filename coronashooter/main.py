@@ -8,13 +8,13 @@ from pygame.locals import (DOUBLEBUF,
                            K_LEFT,
                            K_RIGHT,
                            QUIT,
-                           K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL
+                           K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
+                           K_r
                            )
 from fundo import Fundo
 from elementos import ElementoSprite
 import random
 import sys
-
 
 class Jogo:
     def __init__(self, size=(700, 700), fullscreen=False):
@@ -141,13 +141,30 @@ class Jogo:
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
 
-
     def escreve_textos(self):
         vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives()}', True,(255,255,255))
         pontuacao = self.fonte.render(f'Pontos: {self.jogador.get_pontos()}',True,(255,255,255))
         self.tela.blit(vidas,(0,0))
         self.tela.blit(pontuacao,(600,0))
 
+    def game_over(self):
+        over = True
+        while over:
+            self.tela.fill((255,255,255))
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                    over = False
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                        over = False
+                    if event.key == K_r:
+                        over = False
+            pygame.display.update()
+    
     def loop(self):
         clock = pygame.time.Clock()
         dt = 16
@@ -171,6 +188,8 @@ class Jogo:
             self.desenha_elementos()
             self.escreve_textos()
             pygame.display.flip()
+            
+        self.game_over()
 
 
 class Nave(ElementoSprite):
@@ -319,5 +338,6 @@ class Tiro(ElementoSprite):
 
 
 if __name__ == '__main__':
-    J = Jogo()
-    J.loop()
+    while True:
+        J = Jogo()
+        J.loop()
