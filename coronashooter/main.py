@@ -189,9 +189,14 @@ class Jogo:
                 self.desenha_elementos()
                 self.escreve_textos()
                 pygame.display.flip()
-                
-            self.game_over()
-            J.__init__()
+              
+            if self.jogador.morto:
+                self.game_over()
+                J.__init__() # Reinicia valores para o novo jogo
+            else:
+                pygame.quit()
+                sys.exit()
+                break
 
 
 class Nave(ElementoSprite):
