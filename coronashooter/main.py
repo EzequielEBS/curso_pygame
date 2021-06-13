@@ -47,14 +47,14 @@ class Jogo:
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
-        if xp > 10 and self.level == 0:
-            self.fundo = Fundo("tile2.png")
+        if xp > 100 and self.nivel == 0:
+            self.fundo = Fundo("espaco1.png")
             self.nivel = 1
             self.jogador.set_lives(self.jogador.get_lives() + 3)
-        elif xp > 50 and self.level == 1:
-            self.fundo = Fundo("tile3.png")
+        elif xp > 300 and self.nivel == 1:
+            self.fundo = Fundo("espaco2.png")
             self.nivel = 2
-            self.jogador.set_lives(self.player.get_lives() + 6)
+            self.jogador.set_lives(self.jogador.get_lives() + 6)
 
     def atualiza_elementos(self, dt):
         self.fundo.update(dt)
@@ -144,8 +144,10 @@ class Jogo:
     def escreve_textos(self):
         vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives():3}', True,(255,255,255))
         pontuacao = self.fonte.render(f'Pontos: {self.jogador.get_pontos()}',True,(255,255,255))
+        nivel = self.fonte.render(f'Nível: {self.nivel}', True, (255,255,255))
         self.tela.blit(vidas,(0,0))
         self.tela.blit(pontuacao,(550,0))
+        self.tela.blit(nivel,(300,0))
 
     def tela_inicial(self, dt):
         fonte_grande =  pygame.font.SysFont("comicsansms", 70)
@@ -222,6 +224,7 @@ class Jogo:
                 self.trata_eventos()
                 self.ação_elemento()
                 self.manutenção()
+                self.muda_nivel()
                 
                 # Atualiza Elementos
                 self.atualiza_elementos(dt)
@@ -344,8 +347,8 @@ class Jogador(Nave):
 
     def atira(self, lista_de_tiros, image=None):
         l = 1
-        if self.pontos > 10: l = 3
-        if self.pontos > 50: l = 5
+        if self.pontos > 100: l = 3
+        if self.pontos > 300: l = 5
 
         p = self.get_pos()
         speeds = self.get_fire_speed(l)
