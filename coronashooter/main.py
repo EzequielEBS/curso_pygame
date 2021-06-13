@@ -149,8 +149,10 @@ class Jogo:
 
     def game_over(self):
         over = True
+        imagem_fundo = pygame.image.load('./imagens/game-over.jpg').convert()
+        imagem_fundo =  pygame.transform.scale(imagem_fundo, (700,700))
         while over:
-            self.tela.fill((255,255,255))
+            self.tela.blit(imagem_fundo, (0,0))
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -163,7 +165,7 @@ class Jogo:
                         over = False
                     if event.key == K_r:
                         over = False
-            pygame.display.update()
+            pygame.display.flip()
     
     def loop(self):
         while True:
