@@ -166,30 +166,32 @@ class Jogo:
             pygame.display.update()
     
     def loop(self):
-        clock = pygame.time.Clock()
-        dt = 16
-        self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
-        self.jogador = Jogador([200, 400], 5)
-        self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
-        self.elementos['tiros'] = pygame.sprite.RenderPlain()
-        self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
-        while self.run:
-            clock.tick(1000 / dt)
-
-            
-            self.trata_eventos()
-            self.ação_elemento()
-            self.manutenção()
-            
-            # Atualiza Elementos
-            self.atualiza_elementos(dt)
-            
-            # Desenhe no back buffer
-            self.desenha_elementos()
-            self.escreve_textos()
-            pygame.display.flip()
-            
-        self.game_over()
+        while True:
+            clock = pygame.time.Clock()
+            dt = 16
+            self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
+            self.jogador = Jogador([200, 400], 5)
+            self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
+            self.elementos['tiros'] = pygame.sprite.RenderPlain()
+            self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
+            while self.run:
+                clock.tick(1000 / dt)
+    
+                
+                self.trata_eventos()
+                self.ação_elemento()
+                self.manutenção()
+                
+                # Atualiza Elementos
+                self.atualiza_elementos(dt)
+                
+                # Desenhe no back buffer
+                self.desenha_elementos()
+                self.escreve_textos()
+                pygame.display.flip()
+                
+            self.game_over()
+            J.__init__()
 
 
 class Nave(ElementoSprite):
@@ -338,6 +340,5 @@ class Tiro(ElementoSprite):
 
 
 if __name__ == '__main__':
-    while True:
         J = Jogo()
         J.loop()
