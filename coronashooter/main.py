@@ -8,13 +8,13 @@ from pygame.locals import (DOUBLEBUF,
                            K_LEFT,
                            K_RIGHT,
                            QUIT,
-                           K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL
+                           K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
+                           K_r
                            )
 from fundo import Fundo
 from elementos import ElementoSprite
 import random
 import sys
-
 
 class Jogo:
     def __init__(self, size=(700, 700), fullscreen=False):
@@ -141,36 +141,103 @@ class Jogo:
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
 
-
     def escreve_textos(self):
         vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives()}', True,(255,255,255))
         pontuacao = self.fonte.render(f'Pontos: {self.jogador.get_pontos()}',True,(255,255,255))
         self.tela.blit(vidas,(0,0))
         self.tela.blit(pontuacao,(600,0))
 
-    def loop(self):
+    def tela_inicial(self, dt):
+        fonte_grande =  pygame.font.SysFont("comicsansms", 70)
+        fonte_pequena =  pygame.font.SysFont("comicsansms", 30)
+        
+        mensagem_inicio = fonte_grande.render('Coronashooter',True, (255, 255, 255))
+        mensagem_começar = fonte_pequena.render('Pressione Qualquer Tecla',True, (255, 255, 255))
+        
+        #centrlizar
+        rect_inicio = mensagem_inicio.get_rect()
+        rect_começar = mensagem_começar.get_rect()
+        rect_inicio.centerx = rect_começar.centerx = self.tela.get_size()[0]//2
+        rect_inicio.centery = 300
+        rect_começar.centery = 400
+        
+        #imagem_fundo = pygame.image.load('./imagens/inicio.jpg').convert()
+        #imagem_fundo =  pygame.transform.scale(imagem_fundo, (700,700))
+        
         clock = pygame.time.Clock()
-        dt = 16
-        self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
-        self.jogador = Jogador([200, 400], 5)
-        self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
-        self.elementos['tiros'] = pygame.sprite.RenderPlain()
-        self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
-        while self.run:
+        inicio = True
+        while inicio:
             clock.tick(1000 / dt)
-
-            
-            self.trata_eventos()
-            self.ação_elemento()
-            self.manutenção()
-            
-            # Atualiza Elementos
             self.atualiza_elementos(dt)
-            
-            # Desenhe no back buffer
             self.desenha_elementos()
-            self.escreve_textos()
+            self.tela.blit(mensagem_inicio,rect_inicio)
+            self.tela.blit(mensagem_começar,rect_começar)
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                    inicio = False
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                    inicio = False
             pygame.display.flip()
+
+    def game_over(self):
+        over = True
+        imagem_fundo = pygame.image.load('./imagens/game-over.jpeg').convert()
+        imagem_fundo =  pygame.transform.scale(imagem_fundo, self.tela.get_size())
+        while over:
+            self.tela.blit(imagem_fundo, (0,0))
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                    over = False
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                        over = False
+                    if event.key == K_r:
+                        over = False
+            pygame.display.flip()
+    
+    def loop(self):
+        dt = 16
+        self.tela_inicial(dt)
+        
+        while True:
+            clock = pygame.time.Clock()
+            self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
+            self.jogador = Jogador([200, 400], 5)
+            self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
+            self.elementos['tiros'] = pygame.sprite.RenderPlain()
+            self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
+            while self.run:
+                clock.tick(1000 / dt)
+    
+                
+                self.trata_eventos()
+                self.ação_elemento()
+                self.manutenção()
+                
+                # Atualiza Elementos
+                self.atualiza_elementos(dt)
+                
+                # Desenhe no back buffer
+                self.desenha_elementos()
+                self.escreve_textos()
+                pygame.display.flip()
+              
+            if self.jogador.morto:
+                self.game_over()
+                J.__init__() # Reinicia valores para o novo jogo
+            else:
+                pygame.quit()
+                sys.exit()
+                break
 
 
 class Nave(ElementoSprite):
@@ -319,5 +386,5 @@ class Tiro(ElementoSprite):
 
 
 if __name__ == '__main__':
-    J = Jogo()
-    J.loop()
+        J = Jogo()
+        J.loop()
