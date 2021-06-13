@@ -142,10 +142,10 @@ class Jogo:
                 self.jogador.atira(self.elementos["tiros"])
 
     def escreve_textos(self):
-        vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives()}', True,(255,255,255))
+        vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives():3}', True,(255,255,255))
         pontuacao = self.fonte.render(f'Pontos: {self.jogador.get_pontos()}',True,(255,255,255))
         self.tela.blit(vidas,(0,0))
-        self.tela.blit(pontuacao,(600,0))
+        self.tela.blit(pontuacao,(550,0))
 
     def tela_inicial(self, dt):
         fonte_grande =  pygame.font.SysFont("comicsansms", 70)
