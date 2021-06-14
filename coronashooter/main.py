@@ -35,10 +35,16 @@ class Jogo:
         pygame.display.set_caption('Corona Shooter')
         self.run = True
 
-    def manutenção(self, qtd):
+    def manutenção(self):
         r = random.randint(0, 100)
         x = random.randint(1, self.screen_size[0])
         virii = self.elementos["virii"]
+        if self.nivel == 0:
+            qtd = 50
+        elif self.nivel == 1:
+            qtd = 30
+        elif self.nivel == 2:
+            qtd = 20
         if r > (qtd * len(virii)):
             enemy = Virus([0, 0])
             size = enemy.get_size()
@@ -226,12 +232,7 @@ class Jogo:
                 
                 self.trata_eventos()
                 self.ação_elemento()
-                if self.nivel == 0:
-                    self.manutenção(50)
-                elif self.nivel == 1:
-                    self.manutenção(30)
-                elif self.nivel == 2:
-                    self.manutenção(20)
+                self.manutenção()
                 self.muda_nivel()
                 
                 # Atualiza Elementos
