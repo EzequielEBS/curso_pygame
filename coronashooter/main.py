@@ -55,7 +55,7 @@ class Jogo:
             self.nivel = 1
             self.jogador.set_lives(self.jogador.get_lives() + 3)
         elif xp > 300 and self.nivel == 1:
-            self.fundo = Fundo("espaco2.png")
+            self.fundo = Fundo("espaco2.jpg")
             self.nivel = 2
             self.jogador.set_lives(self.jogador.get_lives() + 6)
 
