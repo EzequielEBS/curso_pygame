@@ -29,6 +29,7 @@ class Jogo:
         self.jogador = None
         self.interval = 0
         self.nivel = 0
+        pygame.font.init()
         self.fonte = pygame.font.SysFont("segoe-ui-symbol.ttf", 30)
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
