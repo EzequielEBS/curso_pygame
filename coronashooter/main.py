@@ -35,14 +35,17 @@ class Jogo:
         pygame.display.set_caption('Corona Shooter')
         self.run = True
 
-
-    def manutenção(self):
+    def manutenção(self, qtd):
         r = random.randint(0, 100)
         x = random.randint(1, self.screen_size[0])
-        if r > (40 * len(self.elementos["virii"])):
+        virii = self.elementos["virii"]
+        if r > (qtd * len(virii)):
             enemy = Virus([0, 0])
             size = enemy.get_size()
-            enemy.set_pos([x, 0])
+            enemy.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
+            colisores = pygame.sprite.spritecollide(enemy, virii, False)
+            if colisores:
+                return
             self.elementos["virii"].add(enemy)
 
     def muda_nivel(self):
@@ -223,7 +226,12 @@ class Jogo:
                 
                 self.trata_eventos()
                 self.ação_elemento()
-                self.manutenção()
+                if self.nivel == 0:
+                    self.manutenção(50)
+                elif self.nivel == 1:
+                    self.manutenção(30)
+                if self.nivel == 2:
+                    self.manutenção(20)
                 self.muda_nivel()
                 
                 # Atualiza Elementos
