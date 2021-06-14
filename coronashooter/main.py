@@ -230,7 +230,7 @@ class Jogo:
                     self.manutenção(50)
                 elif self.nivel == 1:
                     self.manutenção(30)
-                if self.nivel == 2:
+                elif self.nivel == 2:
                     self.manutenção(20)
                 self.muda_nivel()
                 
