@@ -49,7 +49,12 @@ class Jogo:
         elif self.nivel == 2:
             qtd = 20
         if r > (qtd * len(virii)):
-            enemy = Virus([0, 0])
+            if self.nivel == 0:
+                enemy = Virus([0, 0])
+            elif self.nivel == 1:
+                enemy = Virus([0, 0], image="virus1.png")
+            elif self.nivel == 2:
+                enemy = Virus([0, 0], image="virus2.png")
             size = enemy.get_size()
             enemy.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
             colisores = pygame.sprite.spritecollide(enemy, virii, False)
