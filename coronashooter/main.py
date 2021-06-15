@@ -9,7 +9,8 @@ from pygame.locals import (DOUBLEBUF,
                            K_RIGHT,
                            QUIT,
                            K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
-                           K_r
+                           K_r,
+                           K_p
                            )
 from fundo import Fundo
 from elementos import ElementoSprite
@@ -35,6 +36,7 @@ class Jogo:
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
         self.run = True
+        self.pause = False
 
     def manutenção(self):
         r = random.randint(0, 100)
@@ -133,6 +135,8 @@ class Jogo:
                 self.jogador.accel_right()
             elif key == K_LEFT:
                 self.jogador.accel_left()
+            elif key == K_p:
+                self.pause = not self.pause
 
         if event.type == KEYUP:
             key = event.key
@@ -195,6 +199,11 @@ class Jogo:
                         sys.exit()
                     inicio = False
             pygame.display.flip()
+            
+    def muda_pause(self):
+        for event in pygame.event.get():
+            if event.type == KEYDOWN and event.key == K_p:
+                self.pause = False
 
     def game_over(self):
         over = True
@@ -229,21 +238,23 @@ class Jogo:
             self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
             while self.run:
                 clock.tick(1000 / dt)
-    
-                
-                self.trata_eventos()
-                self.ação_elemento()
-                self.manutenção()
-                self.muda_nivel()
-                
-                # Atualiza Elementos
-                self.atualiza_elementos(dt)
-                
-                # Desenhe no back buffer
-                self.desenha_elementos()
-                self.escreve_textos()
-                pygame.display.flip()
-              
+                if not self.pause:
+                    
+                    self.trata_eventos()
+                    self.ação_elemento()
+                    self.manutenção()
+                    self.muda_nivel()
+                    
+                    # Atualiza Elementos
+                    self.atualiza_elementos(dt)
+                    
+                    # Desenhe no back buffer
+                    self.desenha_elementos()
+                    self.escreve_textos()
+                    pygame.display.flip()
+                else:
+                    self.muda_pause()
+                  
             if self.jogador.morto:
                 self.game_over()
                 J.__init__() # Reinicia valores para o novo jogo
