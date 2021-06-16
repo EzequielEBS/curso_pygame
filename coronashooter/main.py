@@ -52,7 +52,7 @@ class Jogo:
             if self.nivel == 0:
                 enemy = Virus([0, 0])
             elif self.nivel == 1:
-                enemy = Virus([0, 0], image="virus1.png")
+                enemy = Virus_aleatorio([0, 0])
             elif self.nivel == 2:
                 enemy = Virus_inteligente([0, 0])
             size = enemy.get_size()
@@ -347,6 +347,32 @@ class Virus_inteligente(Virus):
         else:
             self.set_speed((0, self.get_speed()[1]))
            
+        move_speed = (self.speed[0] * dt / 16,
+                      self.speed[1] * dt / 16)
+        self.rect = self.rect.move(move_speed)
+        if (self.rect.left > self.area.right) or \
+                (self.rect.top > self.area.bottom) or \
+                (self.rect.right < 0):
+            self.kill()
+        if (self.rect.bottom < - 40):
+            self.kill()
+
+class Virus_aleatorio(Virus):
+    def __init__(self, position, lives=1, speed=None, image=None, size=(100, 100)):
+        if not image:
+            image = "virus1.png"
+        super().__init__(position, lives, speed, image, size)
+        self.acceleration = [1, 1]
+
+    def update(self, dt):
+        # inteligência, seguir o jogador
+        v = random.randint(-10,10)
+        if self.get_pos()[0] < 100:
+            v = 2
+        elif self.get_pos()[0] > 600:
+            v = -2
+        self.set_speed((v, self.get_speed()[1]))
+
         move_speed = (self.speed[0] * dt / 16,
                       self.speed[1] * dt / 16)
         self.rect = self.rect.move(move_speed)
