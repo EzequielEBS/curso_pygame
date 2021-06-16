@@ -363,15 +363,16 @@ class Virus_aleatorio(Virus):
             image = "virus1.png"
         super().__init__(position, lives, speed, image, size)
         self.acceleration = [1, 1]
+        v = random.randint(-10,10)
+        self.set_speed((v, self.get_speed()[1]))
 
     def update(self, dt):
-        # inteligência, seguir o jogador
-        v = random.randint(-10,10)
         if self.get_pos()[0] < 100:
-            v = 2
+            v = random.randint(0,10)
+            self.set_speed((v, self.get_speed()[1]))
         elif self.get_pos()[0] > 600:
-            v = -2
-        self.set_speed((v, self.get_speed()[1]))
+            v = random.randint(-10,0)
+            self.set_speed((v, self.get_speed()[1]))
 
         move_speed = (self.speed[0] * dt / 16,
                       self.speed[1] * dt / 16)
