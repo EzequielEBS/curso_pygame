@@ -54,7 +54,7 @@ class Jogo:
             elif self.nivel == 1:
                 enemy = Virus([0, 0], image="virus1.png")
             elif self.nivel == 2:
-                enemy = Virus([0, 0], image="virus2.png")
+                enemy = Virus_inteligente([0, 0])
             size = enemy.get_size()
             enemy.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
             colisores = pygame.sprite.spritecollide(enemy, virii, False)
@@ -76,7 +76,10 @@ class Jogo:
     def atualiza_elementos(self, dt):
         self.fundo.update(dt)
         for v in self.elementos.values():
-            v.update(dt)
+            try:
+                v.update(dt, position_jogador = self.jogador.get_pos()[0]) # rodar se o vírus for inteligente
+            except TypeError:
+                v.update(dt)
 
     def desenha_elementos(self):
         self.fundo.draw(self.tela)
@@ -327,6 +330,32 @@ class Virus(Nave):
             image = "virus.png"
         super().__init__(position, lives, speed, image, size)
 
+
+class Virus_inteligente(Virus):
+    def __init__(self, position, lives=1, speed=None, image=None, size=(100, 100)):
+        if not image:
+            image = "virus2.png"
+        super().__init__(position, lives=1, speed=None, image=image, size=(100, 100))
+        self.acceleration = [1, 1]
+        
+    def update(self, dt, position_jogador=350):
+        #inteligência, seguir o jogador
+        if position_jogador < self.get_pos()[0]-10:
+            self.set_speed((-4, self.get_speed()[1]))
+        elif position_jogador > self.get_pos()[0]+10:
+            self.set_speed((4, self.get_speed()[1]))
+        else:
+            self.set_speed((0, self.get_speed()[1]))
+           
+        move_speed = (self.speed[0] * dt / 16,
+                      self.speed[1] * dt / 16)
+        self.rect = self.rect.move(move_speed)
+        if (self.rect.left > self.area.right) or \
+                (self.rect.top > self.area.bottom) or \
+                (self.rect.right < 0):
+            self.kill()
+        if (self.rect.bottom < - 40):
+            self.kill()
 
 class Jogador(Nave):
     """
