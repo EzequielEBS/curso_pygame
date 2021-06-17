@@ -38,6 +38,12 @@ class Jogo:
         pygame.mixer.music.load('sons/musica_fundo.wav')
         pygame.mixer.music.play(-1)
         self.music = True
+        #EXPLOSÃO
+        self.explosao = pygame.mixer.Sound('sons/explosao.wav')
+        #BATIDA
+        self.batida = pygame.mixer.Sound('sons/batida.wav')
+        #TIRO
+        self.som_tiro = pygame.mixer.Sound('sons/laser_shot.wav')
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
@@ -127,6 +133,7 @@ class Jogo:
         self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
                                self.jogador.alvejado)
         if self.jogador.morto:
+            pygame.mixer.Sound.play(self.explosao)
             self.run = False
             return
 
@@ -134,6 +141,7 @@ class Jogo:
         self.verifica_impactos(self.jogador, self.elementos["virii"],
                                self.jogador.colisão)
         if self.jogador.morto:
+            pygame.mixer.Sound.play(self.explosao)
             self.run = False
             return
         # Verifica se o personagem atingiu algum alvo.
@@ -156,6 +164,7 @@ class Jogo:
             elif key in (K_LCTRL, K_RCTRL):
                 self.interval = 0
                 self.jogador.atira(self.elementos["tiros"])
+                pygame.mixer.Sound.play(self.som_tiro)
 
         if event.type == KEYDOWN:
             key = event.key
@@ -294,6 +303,7 @@ class Jogo:
                     self.muda_pause()
                   
             if self.jogador.morto:
+                #pygame.mixer.Sound.play(self.explosao)
                 self.game_over()
                 J.__init__() # Reinicia valores para o novo jogo
             else:
@@ -326,12 +336,14 @@ class Nave(ElementoSprite):
         s = list(self.get_speed())
         s[1] *= 2
         Tiro(self.get_pos(), s, image, lista_de_tiros)
+        
 
     def alvejado(self):
         if self.get_lives() <= 0:
             self.kill()
         else:
             self.set_lives(self.get_lives() - 1)
+            
 
     @property
     def morto(self):
@@ -439,6 +451,7 @@ class Jogador(Nave):
         speeds = self.get_fire_speed(l)
         for s in speeds:
             Tiro(p, s, image, lista_de_tiros)
+        
 
     def get_fire_speed(self, shots):
         speeds = []
