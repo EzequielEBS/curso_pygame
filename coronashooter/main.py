@@ -35,6 +35,7 @@ class Jogo:
         self.nivel = 0
         pygame.font.init()
         self.fonte = pygame.font.SysFont("segoe-ui-symbol.ttf", 30)
+        #MÚSICA DE FUNDO
         pygame.mixer.music.load('sons/musica_fundo.wav')
         pygame.mixer.music.play(-1)
         self.music = True
@@ -44,6 +45,13 @@ class Jogo:
         self.batida = pygame.mixer.Sound('sons/batida.wav')
         #TIRO
         self.som_tiro = pygame.mixer.Sound('sons/laser_shot.wav')
+        #GAME OVER
+        self.som_over = pygame.mixer.Sound('sons/game_over.wav')
+        #MORTE DO VÍRUS
+        self.som_morte_virus = pygame.mixer.Sound('sons/morte_virus_som.wav')
+        pygame.mixer.Sound.set_volume(self.som_morte_virus, 0.6)
+        #MÚSICA DO MENU
+        self.musica_menu = pygame.mixer.Sound('sons/menu.wav')
         self.screen_size = self.tela.get_size()
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
@@ -91,6 +99,8 @@ class Jogo:
             volume = 0.1
         pygame.mixer.music.set_volume(volume)
         
+        
+        
             
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
@@ -122,17 +132,20 @@ class Jogo:
             for v in hitted.values():
                 for o in v:
                     action(o)
+                    pygame.mixer.Sound.play(self.som_morte_virus)
             return hitted
 
         elif isinstance(elemento, pygame.sprite.Sprite):
             if pygame.sprite.spritecollide(elemento, list, 1):
                 action()
+                pygame.mixer.Sound.play(self.batida)
             return elemento.morto
 
     def ação_elemento(self):
         self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
                                self.jogador.alvejado)
         if self.jogador.morto:
+            pygame.mixer.Sound.set_volume(self.explosao, 0.6)
             pygame.mixer.Sound.play(self.explosao)
             self.run = False
             return
@@ -140,7 +153,9 @@ class Jogo:
         # Verifica se o personagem trombou em algum inimigo
         self.verifica_impactos(self.jogador, self.elementos["virii"],
                                self.jogador.colisão)
+        
         if self.jogador.morto:
+            pygame.mixer.Sound.set_volume(self.explosao, 0.6)
             pygame.mixer.Sound.play(self.explosao)
             self.run = False
             return
@@ -148,7 +163,7 @@ class Jogo:
         hitted = self.verifica_impactos(self.elementos["tiros"],
                                         self.elementos["virii"],
                                         Virus.alvejado)
-
+            
         # Aumenta a pontos baseado no número de acertos:
         self.jogador.set_pontos(self.jogador.get_pontos() + len(hitted))
 
@@ -245,7 +260,10 @@ class Jogo:
                         pygame.quit()
                         sys.exit()
                     inicio = False
+                    pygame.mixer.Sound.stop(self.musica_menu)
+                    
             pygame.display.flip()
+            
             
     def muda_pause(self):
         for event in pygame.event.get():
@@ -256,7 +274,9 @@ class Jogo:
         over = True
         imagem_fundo = pygame.image.load('./imagens/game-over.jpeg').convert()
         imagem_fundo =  pygame.transform.scale(imagem_fundo, self.tela.get_size())
+        pygame.mixer.Sound.play(self.musica_menu)
         while over:
+            pygame.mixer.music.pause()
             self.tela.blit(imagem_fundo, (0,0))
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -270,13 +290,21 @@ class Jogo:
                         over = False
                     if event.key == K_r:
                         over = False
+                        pygame.mixer.Sound.stop(self.musica_menu)
             pygame.display.flip()
+            
+           
+            
     
     def loop(self):
         dt = 16
+        pygame.mixer.music.pause()
+        pygame.mixer.Sound.play(self.musica_menu)
         self.tela_inicial(dt)
         
         while True:
+            pygame.mixer.Sound.stop(self.musica_menu)
+            pygame.mixer.music.unpause()
             clock = pygame.time.Clock()
             self.elementos['virii'] = pygame.sprite.RenderPlain(Virus([120, 50]))
             self.jogador = Jogador([200, 400], 5)
@@ -284,6 +312,7 @@ class Jogo:
             self.elementos['tiros'] = pygame.sprite.RenderPlain()
             self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
             while self.run:
+                pygame.mixer.Sound.stop(self.musica_menu)
                 clock.tick(1000 / dt)
                 if not self.pause:
                     
