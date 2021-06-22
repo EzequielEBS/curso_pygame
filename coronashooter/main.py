@@ -354,9 +354,6 @@ class Jogo:
             self.elementos['tiros'] = pygame.sprite.RenderPlain()
             self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
             while self.run:
-                pygame.mixer.Sound.stop(self.musica_menu)
-                if self.music:
-                    pygame.mixer.music.unpause()
                 clock.tick(1000 / dt)
                 if not self.pause:
                     
