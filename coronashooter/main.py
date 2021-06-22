@@ -14,7 +14,8 @@ from pygame.locals import (DOUBLEBUF,
                            K_m,
                            K_n,
                            K_LEFTBRACKET,
-                           K_RIGHTBRACKET
+                           K_RIGHTBRACKET,
+                           K_e
                            )
 from fundo import Fundo
 from elementos import ElementoSprite
@@ -72,23 +73,32 @@ class Jogo:
         if self.nivel == 0:
             qtd = 50
         elif self.nivel == 1:
-            qtd = 30
+            qtd = 40
         elif self.nivel == 2:
-            qtd = 20
+            qtd = 25
         if r > (qtd * len(virii)):
             if self.nivel == 0:
                 enemy = Virus([0, 0])
+                image = "tiro_v.png"
             elif self.nivel == 1:
                 enemy = Virus_aleatorio([0, 0])
+                image = "tiro_v1.png"
             elif self.nivel == 2:
                 enemy = Virus_inteligente([0, 0])
+                image = "tiro_v2.png"
             size = enemy.get_size()
             enemy.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
             colisores = pygame.sprite.spritecollide(enemy, virii, False)
             if colisores:
                 return
             self.elementos["virii"].add(enemy)
-            
+            t = 1.8 * qtd
+            for virus in self.elementos["virii"]:
+                num = random.randint(0, 100)
+                if num > t:
+                    virus.atira(self.elementos['tiros_inimigo'], image)
+                    pygame.mixer.Sound.play(self.som_tiro)
+                    
         #Adiciona os sprites de poder
         if (self.jogador.pontos%100 == 0) & (self.jogador.pontos!=0):
             r = random.randint(0, 100)
@@ -102,7 +112,7 @@ class Jogo:
                 if colisores:
                     return
                 self.elementos["poder"].add(item)
-            
+        
 
     def liga_desliga_musica(self):
         if self.music:
@@ -190,8 +200,17 @@ class Jogo:
                 pygame.mixer.Sound.play(self.batida)
             return elemento.morto
 
+          
+    def verifica_defesa(self, elemento, list):
+        for ele in elemento:
+            if pygame.sprite.spritecollide(ele, list, 1):
+                pygame.mixer.Sound.play(self.batida)
+        return
+
 
     def ação_elemento(self):
+        if "defesa" in self.elementos.keys():
+            self.verifica_defesa(self.elementos["defesa"], self.elementos["tiros_inimigo"])
         self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
                                self.jogador.alvejado)
         if self.jogador.morto:
@@ -211,7 +230,10 @@ class Jogo:
         hitted = self.verifica_impactos(self.elementos["tiros"],
                                         self.elementos["virii"],
                                         Virus.alvejado)
-            
+        if "defesa" in self.elementos.keys():
+            self.verifica_impactos(self.elementos["defesa"],
+                               self.elementos["virii"],
+                               Virus.alvejado)
         # Aumenta a pontos baseado no número de acertos:
         self.jogador.set_pontos(self.jogador.get_pontos() + len(hitted))
         
@@ -230,9 +252,10 @@ class Jogo:
             if key == K_ESCAPE:
                 self.run = False
             elif key in (K_LCTRL, K_RCTRL):
-                self.interval = 0
-                self.jogador.atira(self.elementos["tiros"])
-                pygame.mixer.Sound.play(self.som_tiro)
+                if "defesa" not in self.elementos.keys():
+                    self.interval = 0
+                    self.jogador.atira(self.elementos["tiros"])
+                    pygame.mixer.Sound.play(self.som_tiro)
 
         if event.type == KEYDOWN:
             key = event.key
@@ -266,12 +289,18 @@ class Jogo:
                 self.jogador.set_speed((0, self.jogador.get_speed()[1]))
             elif key == K_LEFT:
                 self.jogador.set_speed((0, self.jogador.get_speed()[1]))
+            elif key == K_e:
+                del self.elementos["defesa"]
 
         keys = pygame.key.get_pressed()
         if self.interval > 10:
             self.interval = 0
             if keys[K_RCTRL] or keys[K_LCTRL]:
-                self.jogador.atira(self.elementos["tiros"])
+                if "defesa" not in self.elementos.keys():
+                    self.jogador.atira(self.elementos["tiros"])
+        if keys[K_e]:
+            self.elementos["defesa"] = pygame.sprite.RenderPlain()
+            self.jogador.escudo(self.elementos["defesa"])
 
     def escreve_textos(self):
         vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives():3}', True,(255,255,255))
@@ -438,9 +467,12 @@ class Nave(ElementoSprite):
 
     def atira(self, lista_de_tiros, image=None):
         s = list(self.get_speed())
-        s[1] *= 2
+        s[1] += 1
         Tiro(self.get_pos(), s, image, lista_de_tiros)
-        
+
+    def escudo(self, lista_de_escudos, image=None):
+        pos = list(self.get_pos())
+        Escudo(pos, [0,0], image, lista_de_escudos)
 
     def alvejado(self):
         if self.get_lives() <= 0:
@@ -619,6 +651,13 @@ class Tiro(ElementoSprite):
         if list is not None:
             self.add(list)
 
+class Escudo(ElementoSprite):
+    def __init__(self, position, speed=None, image=None, list=None):
+        if not image:
+            image = "escudo.png"
+        super().__init__(image, position, speed)
+        if list is not None:
+            self.add(list)
 
 class Poder(ElementoSprite):
     def __init__(self, position, image=None, speed=None, new_size=(100,100)):
