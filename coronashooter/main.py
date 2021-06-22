@@ -42,6 +42,14 @@ class Jogo:
         pygame.mixer.music.play(-1)
         self.music = True
         
+        #SONS
+        #explosão
+        self.explosao = pygame.mixer.Sound('sons/explosao.wav')
+        #batida
+        self.batida = pygame.mixer.Sound('sons/batida.wav')
+        #tiro
+        self.som_tiro = pygame.mixer.Sound('sons/laser_shot.wav')
+        
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
         self.run = True
@@ -133,6 +141,7 @@ class Jogo:
         self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
                                self.jogador.alvejado)
         if self.jogador.morto:
+            #pygame.mixer.Sound.play(self.explosao)
             self.run = False
             return
 
@@ -140,6 +149,7 @@ class Jogo:
         self.verifica_impactos(self.jogador, self.elementos["virii"],
                                self.jogador.colisão)
         if self.jogador.morto:
+            #pygame.mixer.Sound.play(self.explosao)
             self.run = False
             return
         # Verifica se o personagem atingiu algum alvo.
@@ -162,6 +172,7 @@ class Jogo:
             elif key in (K_LCTRL, K_RCTRL):
                 self.interval = 0
                 self.jogador.atira(self.elementos["tiros"])
+                pygame.mixer.Sound.play(self.som_tiro)
 
         if event.type == KEYDOWN:
             key = event.key
@@ -198,6 +209,7 @@ class Jogo:
             self.interval = 0
             if keys[K_RCTRL] or keys[K_LCTRL]:
                 self.jogador.atira(self.elementos["tiros"])
+                pygame.mixer.Sound.play(self.som_tiro)
 
     def escreve_textos(self):
         vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives():3}', True,(255,255,255))
@@ -300,6 +312,7 @@ class Jogo:
                     self.muda_pause()
                   
             if self.jogador.morto:
+                pygame.mixer.Sound.play(self.explosao)
                 self.game_over()
                 J.__init__() # Reinicia valores para o novo jogo
             else:
