@@ -65,6 +65,7 @@ class Jogo:
         self.pause = False
 
     def manutenção(self):
+        #Adiciona os vírus
         r = random.randint(0, 100)
         x = random.randint(1, self.screen_size[0])
         virii = self.elementos["virii"]
@@ -87,6 +88,21 @@ class Jogo:
             if colisores:
                 return
             self.elementos["virii"].add(enemy)
+            
+        #Adiciona os sprites de poder
+        if (self.jogador.pontos%100 == 0) & (self.jogador.pontos!=0):
+            r = random.randint(0, 100)
+            x = random.randint(1, self.screen_size[0])
+            poder = self.elementos["poder"]
+            if r > (100 * len(poder)):
+                item = Poder([0, 0])
+                size = item.get_size()
+                item.set_pos([min(max(x, size[0] / 2), self.screen_size[0] - size[0] / 2), size[1] / 2])
+                colisores = pygame.sprite.spritecollide(item, poder, False)
+                if colisores:
+                    return
+                self.elementos["poder"].add(item)
+            
 
     def liga_desliga_musica(self):
         if self.music:
@@ -134,8 +150,6 @@ class Jogo:
                 volume = 0.1
             pygame.mixer.Sound.set_volume(som, volume)
         
-        
-        
             
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
@@ -176,6 +190,7 @@ class Jogo:
                 pygame.mixer.Sound.play(self.batida)
             return elemento.morto
 
+
     def ação_elemento(self):
         self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
                                self.jogador.alvejado)
@@ -199,6 +214,11 @@ class Jogo:
             
         # Aumenta a pontos baseado no número de acertos:
         self.jogador.set_pontos(self.jogador.get_pontos() + len(hitted))
+        
+        # Verifica se o personagem adquiriu uma arma especial.
+        self.verifica_impactos(self.jogador,
+                               self.elementos["poder"],
+                               self.jogador.modo_super)
 
     def trata_eventos(self):
         event = pygame.event.poll()
@@ -269,7 +289,7 @@ class Jogo:
         fonte_pequena =  pygame.font.SysFont("comicsansms", 30)
         
         mensagem_inicio = fonte_grande.render('Coronashooter',True, (255, 255, 255))
-        mensagem_começar = fonte_pequena.render('Pressione Qualquer Tecla',True, (255, 255, 255))
+        mensagem_começar = fonte_pequena.render('Pressione qualquer tecla para iniciar',True, (255, 255, 255))
         
         #centrlizar
         rect_inicio = mensagem_inicio.get_rect()
@@ -337,9 +357,6 @@ class Jogo:
                         over = False
                         pygame.mixer.Sound.stop(self.musica_menu)
             pygame.display.flip()
-            
-           
-            
     
     def loop(self):
         dt = 16
@@ -356,6 +373,7 @@ class Jogo:
             self.elementos['jogador'] = pygame.sprite.RenderPlain(self.jogador)
             self.elementos['tiros'] = pygame.sprite.RenderPlain()
             self.elementos['tiros_inimigo'] = pygame.sprite.RenderPlain()
+            self.elementos['poder'] = pygame.sprite.RenderPlain(Poder([1500,1000]))
             while self.run:
                 clock.tick(1000 / dt)
                 if not self.pause:
@@ -371,6 +389,14 @@ class Jogo:
                     # Desenhe no back buffer
                     self.desenha_elementos()
                     self.escreve_textos()
+                    
+                    # Atualiza o tempo de  arma especial
+                    if self.jogador.timer > 0:
+                        self.jogador.timer = self.jogador.timer - 0.1
+                    if self.jogador.timer <= 0:
+                        self.jogador.poder_adquirido = 0
+
+                        
                     pygame.display.flip()
                 else:
                     self.muda_pause()
@@ -388,10 +414,13 @@ class Jogo:
 
 
 class Nave(ElementoSprite):
-    def __init__(self, position, lives=0, speed=[0, 0], image=None, new_size=[83, 248]):
+    def __init__(self, position, lives=0, speed=[0, 0], image=None, new_size=[83, 248], poder_adquirido = None):
+        self.timer = 0
         self.acceleration = [6, 6]
+        if not poder_adquirido:
+            self.poder_adquirido = 0
         if not image:
-            image = "seringa.png"
+            self.image = "seringa.png"
         super().__init__(image, position, speed, new_size)
         self.set_lives(lives)
 
@@ -418,7 +447,10 @@ class Nave(ElementoSprite):
             self.kill()
         else:
             self.set_lives(self.get_lives() - 1)
-            
+    
+    def modo_super(self):
+        self.poder_adquirido += 1
+        self.timer += 30
 
     @property
     def morto(self):
@@ -546,8 +578,8 @@ class Jogador(Nave):
 
     def atira(self, lista_de_tiros, image=None):
         l = 1
-        if self.pontos > 100: l = 3
-        if self.pontos > 300: l = 5
+        if self.poder_adquirido >= 1: l = 3
+        if self.poder_adquirido >= 2: l = 5
 
         p = self.get_pos()
         speeds = self.get_fire_speed(l)
@@ -586,6 +618,13 @@ class Tiro(ElementoSprite):
         super().__init__(image, position, speed)
         if list is not None:
             self.add(list)
+
+
+class Poder(ElementoSprite):
+    def __init__(self, position, image=None, speed=None, new_size=(100,100)):
+        if not image:
+            image = "poder.png"
+        super().__init__(image, position, speed, new_size)
 
 
 if __name__ == '__main__':
