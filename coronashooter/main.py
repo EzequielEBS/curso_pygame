@@ -209,6 +209,7 @@ class Jogo:
 
 
     def ação_elemento(self):
+        #Verifica se o tiro inimigo atingiu o escudo
         if "defesa" in self.elementos.keys():
             self.verifica_defesa(self.elementos["defesa"], self.elementos["tiros_inimigo"])
         self.verifica_impactos(self.jogador, self.elementos["tiros_inimigo"],
@@ -230,6 +231,7 @@ class Jogo:
         hitted = self.verifica_impactos(self.elementos["tiros"],
                                         self.elementos["virii"],
                                         Virus.alvejado)
+        # Verifica se o vírus atingiu o escudo:
         if "defesa" in self.elementos.keys():
             self.verifica_impactos(self.elementos["defesa"],
                                self.elementos["virii"],
@@ -252,6 +254,7 @@ class Jogo:
             if key == K_ESCAPE:
                 self.run = False
             elif key in (K_LCTRL, K_RCTRL):
+                # Verifica se o escudo está desativado:
                 if "defesa" not in self.elementos.keys():
                     self.interval = 0
                     self.jogador.atira(self.elementos["tiros"])
@@ -290,12 +293,14 @@ class Jogo:
             elif key == K_LEFT:
                 self.jogador.set_speed((0, self.jogador.get_speed()[1]))
             elif key == K_e:
+                #Apaga o escudo ao soltar a tecla
                 del self.elementos["defesa"]
 
         keys = pygame.key.get_pressed()
         if self.interval > 10:
             self.interval = 0
             if keys[K_RCTRL] or keys[K_LCTRL]:
+                # Verifica se o escudo está desativado
                 if "defesa" not in self.elementos.keys():
                     self.jogador.atira(self.elementos["tiros"])
         if keys[K_e]:
@@ -320,7 +325,7 @@ class Jogo:
         mensagem_inicio = fonte_grande.render('Coronashooter',True, (255, 255, 255))
         mensagem_começar = fonte_pequena.render('Pressione qualquer tecla para iniciar',True, (255, 255, 255))
         
-        #centrlizar
+        #centralizar
         rect_inicio = mensagem_inicio.get_rect()
         rect_começar = mensagem_começar.get_rect()
         rect_inicio.centerx = rect_começar.centerx = self.tela.get_size()[0]//2
@@ -449,7 +454,7 @@ class Nave(ElementoSprite):
         if not poder_adquirido:
             self.poder_adquirido = 0
         if not image:
-            self.image = "seringa.png"
+            image = "seringa.png"
         super().__init__(image, position, speed, new_size)
         self.set_lives(lives)
 
