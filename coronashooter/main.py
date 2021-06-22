@@ -10,7 +10,10 @@ from pygame.locals import (DOUBLEBUF,
                            QUIT,
                            K_ESCAPE, K_UP, K_DOWN, K_RCTRL, K_LCTRL,
                            K_r,
-                           K_p
+                           K_p,
+                           K_m,
+                           K_LEFTBRACKET,
+                           K_RIGHTBRACKET
                            )
 from fundo import Fundo
 from elementos import ElementoSprite
@@ -33,6 +36,12 @@ class Jogo:
         pygame.font.init()
         self.fonte = pygame.font.SysFont("segoe-ui-symbol.ttf", 30)
         self.screen_size = self.tela.get_size()
+        
+        #MÚSICA
+        pygame.mixer.music.load('sons/musica_fundo.wav')
+        pygame.mixer.music.play(-1)
+        self.music = True
+        
         pygame.mouse.set_visible(0)
         pygame.display.set_caption('Corona Shooter')
         self.run = True
@@ -61,6 +70,27 @@ class Jogo:
             if colisores:
                 return
             self.elementos["virii"].add(enemy)
+            
+    #FUNÇÕES DE MÚSICA
+    
+    def liga_desliga_musica(self):
+        if self.music:
+            pygame.mixer.music.pause()
+            self.music = False
+        else:
+            pygame.mixer.music.unpause()
+            self.music = True
+
+    def ajusta_volume(self,m):
+        volume = pygame.mixer.music.get_volume()
+        volume *= m
+        if volume > 1:
+            volume = 1
+        if volume < 0.1:
+            volume = 0.1
+        pygame.mixer.music.set_volume(volume)
+
+    #----
 
     def muda_nivel(self):
         xp = self.jogador.get_pontos()
@@ -145,6 +175,12 @@ class Jogo:
                 self.jogador.accel_left()
             elif key == K_p:
                 self.pause = not self.pause
+            elif key == K_m:
+                self.liga_desliga_musica()
+            elif key == K_LEFTBRACKET:
+                self.ajusta_volume(0.9)
+            elif key == K_RIGHTBRACKET:
+                self.ajusta_volume(1.1)
 
         if event.type == KEYUP:
             key = event.key
