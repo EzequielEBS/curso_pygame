@@ -3,7 +3,7 @@ Aprimorar o jogo do repositório original.
 
 ## Estagio Inicial
 
-Começamos o jogo a parti da fase 5, para isso criamos a branch copia_fase_5 no repositório EzequielEBS/curso_pygame, onde trabalhos os updates.
+Começamos o jogo a parti da fase 5, para isso criamos a branch copia_fase_5 no repositório [EzequielEBS/curso_pygame](https://github.com/EzequielEBS/curso_pygame/tree/copia_fase_5), onde trabalhos os updates.
 
 ## Quem fez?
 
