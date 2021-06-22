@@ -1,74 +1,50 @@
-# Curso de Programação de Jogos com Pygame
-Criando um jogo de naves espaciais com Pygame. Para iniciantes em Python
+# UPDATE - coronashooter
+Aprimorar o jogo do repositório original.
 
-## Pré-requisitos
-Antes de começar este curso você precisa ter instalado em seu computador o git (com o qual irá clora este repositório) e o pygame
+## Estagio Inicial
 
-```bash
-pip install pygame
-```
+Começamos o jogo a parti da fase 5, para isso criamos a branch copia_fase_5 no repositório EzequielEBS/curso_pygame, onde trabalhos os updates.
 
-## Acompanhando o curso
+## Quem fez?
 
-Para acompanhar o curso vamos usar `tags` do git para ir migrando o código através das várias etapas de desenvolvimento. Então antes de começar certifique-se de que todas as tags estão atualizadas em seu clone:
+## Dica
 
-```bash
-git fetch --all --tags
-```
-# O Jogo
-O jogo que iremos criar chama-se "Corona Shooter". e trata-se de um jogo de naves espaciais inspirado em uma pandemia de coronavirus.
+Para poder ver as fases novas, você pode tanto ver o vídeo disponível neste repositório como pode alterar os valores das variáveis nivel e pontuação.
 
-## Fase 0
-Na fase 0 começamos a organizar basicamente o nosso código. Para viajar no tempo até a faso 0 use o seguinte comando:
+# Alterações
 
-```bash
-git checkout Fase_0
-```
-Nesta fase criamos a estrutura básica do projeto e cria o módulo principal do jogo.
+* Mudamos o controle da nave.
+* Adicionamos tela de start (com o fundo rolante) e game-over (com uma imagem fixa), assim o jogo nem começa e nem termina repentinamente.
+* Adicionamos marcação de fase, pontos e vida.
+* Agora, o botão "P" pause.
+* Adicionamos músicas e efeitos sonoros (tiro, colisão, morte).
+* Os sons podem ser controlados, com "M" ou "N", você pode pausar a música ou os efeitos sonoros e com "\[" e "\]" controlar o volume.
+* As fases agora possuem transição, mudando os inimigos e o fundo.
+* O movimento dos vírus mudam com a fase, tendo direção e velocidade aleatória na fase 1 e persegem o jogador no nível 2, para isso foram criadas novas classes que herdão da classe Virus.
+* Alteramos também a difculdade do jogo, agora os vírus atiram e a nave pode se defender com o esculdo, apertando "E", bem como o tiro forte precisará ser conquistado com um novo item.
 
-O módulo principal se chama [main.py](/coronashooter/main.py) e fica no diretório coronashooter.
+# Metas compridas!
 
-Também criamos um arquivo de texto na raiz do nosso projeto, chamado de [requirements.txt](/requirements.txt) onde vamos listar todas as bibliotecas necessárias para o nosso jogo.
+Realizamos todos os critérios pedidos na entrega do trabalho. Como descrito abaixo.
 
-Nesta fase, se executado, o módulo `main.py` apenas apresenta uma janela escura.
+## Elementos básicos
 
-## Fase 1
-Na fase 1 vamos usar uma classe para organizar a inicialização e os parâmetros do nosso jogo. Vamos também criar um módulo adicional para cuidar da especificação do plano de fundo do jogo.
+* Uso de sprites: não só permanecendo os sprites que já haviam, mas adicionamos os novos tiros e os novos vírus(os tiros são diferentes para cada vírus)
+* Controle do movimento de sprites via código: Adicionamos isto no vírus da fase 1.
+* Controle de um sprite via teclado: A nave é controlada por teclado (a qual mudamos o movimento).
 
-```bash
-git checkout Fase_1
-```
+## Novos elementos gráficos.
 
-Ao final desta fase temos nosso plano de fundo rolando de cima para baixo no nosso jogo. Para isso também adicionamos uma imagem de fundo a um diretório de imagens onde iremos manter todos os elementos gráficos do nosso projeto. 
+* Adicionamos novas telas e novos fundos
+* Mudamos a imagem dos vírus
 
-## Fase 2
-Nesta fase iremos adicionar outros controles ao jogo.
-```bash
-git checkout Fase_2
-```
-Nesta fase movemos o tratamento de eventos para um método separado, e configuramos a tecla `ESC` como tecla de sair do jogo.
+## Elementos sonoros
 
-## Fase 3
-Nesta fase vamos adicionar a Nave.
+* O jogo tem duas músicas, uma para o jogo e outra para o menu, bem como os efeitos sonoros de explosão no game-over, barulho de tiro e barulho que indica colisão.
 
-```bash
-git checkout Fase_3
-```
-Para isso, vamos criar mais [um módulo](/coronashooter/elementos.py) como uma classe de base para qualquer `sprite` do jogo.
+## Novas lógicas
 
-Em seguida iremos criar uma classe para a Nave do jogador e outra para as naves inimigas.
-
-Ao final desta fase poderemos ver as naves na tela.
-
-## Fase 4
-Nesta fase vamos adicionar movimento às naves. Neste processo vamos adicionar também algumas coisas a mais, como a geração de novos virus, controle movimentos da nave do jogador, outras coisas a mais. 
-
-Veja como o jogo ficou.
-```bash
-git checkout Fase_4
-```
-
-## Fase 5
-Na fase 5 vamos adicionar tiros e colisões para completar o Jogo.
-
-Os tiros serão implementados como uma classe.
+* Temos o vírus inteligente na fase 2, que recebe a entrada da posição do inimigo para poder se mover em direção a ele. Além disso todos os vírus atiram.
+* Mas não tema estas novas variantes! Agora há novas armas para vence-los, como o escudo e o item brilhante. Mas não adianta querer bater seu record batendo com o esculdo, os pontos não serão contadas!
+* As fases têm transição, com a mudança de fundo.
+* Além disso o pause com o botão "P" foi implementado.
