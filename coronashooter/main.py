@@ -257,9 +257,12 @@ class Jogo:
         vidas = self.fonte.render(f'Vidas: {self.jogador.get_lives():3}', True,(255,255,255))
         pontuacao = self.fonte.render(f'Pontos: {self.jogador.get_pontos()}',True,(255,255,255))
         nivel = self.fonte.render(f'Nível: {self.nivel}', True, (255,255,255))
+        simbolo_pause = self.fonte.render("||", True, (255,255,255))
         self.tela.blit(vidas,(0,0))
         self.tela.blit(pontuacao,(550,0))
         self.tela.blit(nivel,(300,0))
+        if self.pause == True:
+            self.tela.blit(simbolo_pause, (5,20))
 
     def tela_inicial(self, dt):
         fonte_grande =  pygame.font.SysFont("comicsansms", 70)
