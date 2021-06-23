@@ -15,7 +15,7 @@ Começamos o jogo a parti da fase 5, para isso criamos a branch `copia_fase_5` n
 
 ## Dica
 
-Para poder ver as fases novas, você pode tanto ver o vídeo disponível neste repositório como pode alterar os valores das variáveis `nivel` e `pontuação`.
+Para poder ver as fases novas, você pode tanto ver o vídeo disponível neste repositório como pode alterar os valores das variáveis `nivel` e `pontuação` (para 100 e 300 pontos).
 
 # Alterações
 
