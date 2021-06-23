@@ -7,15 +7,14 @@ Começamos o jogo a partir da fase 5, para isso criamos a branch `copia_fase_5` 
 
 ## Quem fez?
 
-*
-*
-*
-*
-*
+* Amanda Perez
+* Ezequiel de Braga
+* Jairon Henrique
+* Sofia Lakschevitz
 
 ## Dica
 
-Para poder ver as fases novas, você pode tanto ver o vídeo disponível neste repositório como pode alterar os valores das variáveis `nivel` e `pontuação` (para 100 e 300 pontos).
+Para poder ver as fases novas, você pode tanto ver este [vídeo](https://youtu.be/uQMlEPHw_vo) como pode alterar os valores das variáveis `nivel` e `pontuação` (para 100 e 300 pontos).
 
 # Alterações
 
