@@ -27,7 +27,7 @@ Para poder ver as fases novas, você pode tanto ver o vídeo disponível neste r
 * Os sons podem ser controlados: com "M" e "N", você pode pausar a música ou os efeitos sonoros, respectivamente, e com "\[" e "\]" controlar o volume.
 * As fases agora possuem transição, mudando os inimigos e o fundo.
 * O movimento dos vírus mudam com a fase, tendo direção e velocidade aleatórias na fase 1 e perseguindo o jogador no nível 2. Para isso foram criadas novas classes que herdam da classe Virus.
-* Alteramos também a dificuldade do jogo: agora os vírus atiram e a nave pode se defender com o escudo, apertando "E", bem como o "tiro forte" precisará ser conquistado com um novo item que aparece em tela a cada 100 pontos conquistados pelo jogador.
+* Alteramos também a dificuldade do jogo: agora os vírus atiram e a nave pode se defender com o escudo, apertando "E", bem como o "tiro forte" precisará ser conquistado com um novo item que aparece na tela a cada 100 pontos conquistados pelo jogador. O tiro forte é perdido após 30 segundos.
 
 # Metas cumpridas!
 
