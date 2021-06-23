@@ -3,7 +3,7 @@ Aprimorar o jogo do repositório original.
 
 ## Estagio Inicial
 
-Começamos o jogo a parti da fase 5, para isso criamos a branch `copia_fase_5` no repositório [EzequielEBS/curso_pygame](https://github.com/EzequielEBS/curso_pygame/tree/copia_fase_5), onde trabalhos os updates.
+Começamos o jogo a partir da fase 5, para isso criamos a branch `copia_fase_5` no repositório [EzequielEBS/curso_pygame](https://github.com/EzequielEBS/curso_pygame/tree/copia_fase_5), onde trabalhamos os updates.
 
 ## Quem fez?
 
@@ -36,7 +36,7 @@ Realizamos todos os critérios pedidos na entrega do trabalho, como descrito aba
 ## Elementos básicos
 
 * Uso de sprites: além da permanência dos sprites que já haviam, adicionamos os novos tiros e os novos vírus (os tiros são diferentes para cada vírus), bem como um item especial que pode ser pego pelo jogador para aumentar temporariamente a quantidade de tiros.
-* Controle do movimento de sprites via código: adicionamos isto no vírus da fase 1.
+* Controle do movimento de sprites via código: adicionamos isso no vírus da fase 1.
 * Controle de um sprite via teclado: a nave é controlada por teclado (por meio do qual mudamos seu movimento).
 
 ## Novos elementos gráficos.
